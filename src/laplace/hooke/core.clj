@@ -41,15 +41,14 @@
   (letfn [(add-hook [var*]
             (let [f* (-> var* second)]
               (h/add-hook f*
-                          ::hook
+                          ::laplace
                           (fn [f & args]
                             (m/profile f* (apply f args))
-                            (send-to-collector! f args f*))
-                          )))]
+                            (send-to-collector! f args f*)))))]
     (manipulate-hooks ns* add-hook)))
 
 (defn remove-hooks [ns*]
   (letfn [(remove-hook [var*]
             (h/remove-hook (-> var* second)
-                           ::hook))]
+                           ::laplace))]
     (manipulate-hooks ns* remove-hook)))
