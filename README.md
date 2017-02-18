@@ -85,11 +85,13 @@ If you used the Elasticsearch collector, the newly indexed document, upon queryi
 
 ## TODO
 
-- upload to Clojars
-- individual function hooks
+- Upload to Clojars
+- Individual function hooks
 - Leiningen plugin
 - Namespace/function exclusions
 - Argument exclusions/obfuscations
+- Handle multiple arity/multimethods
+- Bulk send to collector at specific times and not by call
 
 ## License
 
