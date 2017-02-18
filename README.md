@@ -44,7 +44,7 @@ Now set up the hooks for your namespace. For example, in the namespace `user` we
 create a dummy function
 
 ```clojure
-(defn k [a b & c])
+(defn example [a b & c])
 ```
 
 and then we set up the hooks for the namespace
@@ -57,7 +57,9 @@ By invoking the function, the library sends the parameter and execution time inf
 to the collector you used. In case of the logger collector, the REPL asynchronously gets
 
 ```
-. user.k : (a 1 b 2)
+(example 1 2)
+=>
+. user.example : (a 1 b 2)
 {:elapsed 5.0E-6}
 ```
 
@@ -68,7 +70,7 @@ If you used the Elasticsearch collector, the newly indexed document, upon queryi
 "hits": [
       {
         "_index": "laplacehook_",
-        "_type": "user/k",
+        "_type": "user/example",
         "_id": "AVpSRVjMH0p0EeP2WQss",
         "_score": 1.0,
         "_source": {
