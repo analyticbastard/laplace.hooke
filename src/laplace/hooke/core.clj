@@ -43,8 +43,8 @@
               (h/add-hook f*
                           ::laplace
                           (fn [f & args]
-                            (m/profile f* (apply f args))
-                            (send-to-collector! f args f*)))))]
+                            (send-to-collector! f args f*)
+                            (m/profile f* (apply f args))))))]
     (manipulate-hooks ns* add-hook)))
 
 (defn remove-hooks [ns*]
