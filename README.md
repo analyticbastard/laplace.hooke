@@ -92,6 +92,7 @@ If you used the Elasticsearch collector, the newly indexed document, upon queryi
 - Argument exclusions/obfuscations
 - Handle multiple arity/multimethods
 - Bulk send to collector at specific times and not by call
+- Collecting rules/sampling
 
 ## License
 
