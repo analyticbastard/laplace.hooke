@@ -52,3 +52,9 @@
             (h/remove-hook (-> var* second)
                            ::laplace))]
     (manipulate-hooks ns* remove-hook)))
+
+(defn add-hooks-all [re]
+  (->> (all-ns)
+       (map str)
+       (filter #(re-find re %))
+       (map add-hooks)))
