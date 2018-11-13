@@ -4,8 +4,6 @@
            [listora.measure :as m]))
 
 (defprotocol Collector
-  (start [this])
-  (stop [this])
   (collect [this project version ns* name* params bench-info]))
 
 (def ^:dynamic *project* "")
