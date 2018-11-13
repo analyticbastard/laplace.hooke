@@ -53,6 +53,12 @@
 
 (defn add-hooks-all [re]
   (->> (all-ns)
-       (map str)
-       (filter #(re-find re %))
+       (sequence
+        (comp
+         (map str)
+         (filter #(re-find re %))
+         (map symbol)))
        (map add-hooks)))
+
+(defn add-logger [logger]
+  (intern 'laplace.hooke.core '*collector* logger))
