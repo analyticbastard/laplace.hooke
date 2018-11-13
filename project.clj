@@ -6,6 +6,5 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/core.async "0.2.395"]
                  [robert/hooke "1.3.0"]
-                 [clojurewerkz/elastisch "3.0.0-beta1"]
                  [listora/measure "0.1.4" :exclusions [org.clojure/core.async]]
                  ])
