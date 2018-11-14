@@ -14,17 +14,15 @@
 
 (def ^:dynamic *collector*)
 
-(defn send-to-collector! [f args f*]
-  (a/go
-    (let [meta-f  (meta f*)
-          ns*     (-> meta-f :ns str)
-          name*   (-> meta-f :name str)
-          arglist (->> meta-f :arglists
-                       first                                  ;; todo handle multi arity
-                       (remove #(= % '&)))
-          params  (interleave arglist args)
-          bench   (get (a/<! m/measurements) f*)]
-      (.collect *collector* *project* *version* ns* name* params bench))))
+(defn collect-measures! []
+  (a/go-loop []
+    (when-let [bench (a/<! m/measurements)]
+      (doseq [f* (keys bench)
+              :let [meta-f (meta f*)
+                    ns* (-> meta-f :ns str)
+                    name* (-> meta-f :name str)]]
+        (.collect *collector* *project* *version* ns* name* [] (get bench f*)))
+      (recur))))
 
 (defn manipulate-hooks [ns* p]
   (->> ns*
@@ -35,15 +33,16 @@
            (filter (comp fn? var-get second))
            (map p)))))
 
+(defn add-hook [var*]
+  (let [f* (-> var* second)]
+    (h/add-hook f*
+                ::laplace
+                (fn [f & args]
+                  (m/profile f* (apply f args))))))
+
 (defn add-hooks [ns*]
-  (letfn [(add-hook [var*]
-            (let [f* (-> var* second)]
-              (h/add-hook f*
-                          ::laplace
-                          (fn [f & args]
-                            (send-to-collector! f args f*)
-                            (m/profile f* (apply f args))))))]
-    (manipulate-hooks ns* add-hook)))
+  (collect-measures!)
+  (manipulate-hooks ns* add-hook))
 
 (defn remove-hooks [ns*]
   (letfn [(remove-hook [var*]
@@ -60,5 +59,5 @@
          (map symbol)))
        (map add-hooks)))
 
-(defn add-logger [logger]
+(defn set-collector [logger]
   (intern 'laplace.hooke.core '*collector* logger))
